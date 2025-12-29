@@ -3,12 +3,22 @@ name = "personal-assistant"
 version = "0.1.0"
 description = "Personal assistant application"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "streamlit",
+    "langchain>=0.0.180",
+    "pydantic>=2.0.0",
+    "langchain-google-genai",
+    "fpdf==1.7.2",
+    "python-dotenv",
+    "ipykernel>=7.1.0",
+    "google-adk>=1.21.0",
+    "pywin32>=311",
+    "litellm>=1.80.11",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.uv]
-dev-dependencies = []
-
+[tool.hatch.build.targets.wheel]
+packages = ["src/personal_assistant"]
