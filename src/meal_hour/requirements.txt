@@ -1,0 +1,13 @@
+reflex==0.8.24.post1
+reflex>=0.6.0
+google-cloud-bigquery>=3.0.0
+pandas>=2.0.0
+pandas-gbq>=0.32.0
+db-dtypes>=1.5.0
+reflex>=0.5.0
+pandas
+google-cloud-bigquery
+pandas-gbq
+google-genai
+google-cloud-storage
+pydantic

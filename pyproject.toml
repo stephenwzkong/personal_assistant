@@ -12,8 +12,14 @@ dependencies = [
     "python-dotenv",
     "ipykernel>=7.1.0",
     "google-adk>=1.21.0",
-    "pywin32>=311",
+    "pywin32>=311; sys_platform == 'win32'",
     "litellm>=1.80.11",
+    "google>=3.0.0",
+    "db-dtypes>=1.5.0",
+    "pandas-gbq>=0.32.0",
+    "reflex>=0.6.0",
+    "google-cloud-bigquery>=3.0.0",
+    "pandas>=2.0.0",
 ]
 
 [build-system]

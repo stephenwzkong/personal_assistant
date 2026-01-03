@@ -1,0 +1,105 @@
+[env]
+PROJECT_ID = "gen-lang-client-0288149151"
+REGION = "us-central1"
+IMAGE_NAME = "meal-hour-tracker"
+REPO_NAME = "meal-hour-repo"
+SERVICE_NAME = "meal-hour-tracker"
+
+[tasks.setup-registry]
+description = "Create Artifact Registry repository (one-time setup)"
+run = """
+gcloud artifacts repositories create $REPO_NAME \
+    --repository-format=docker \
+    --location=$REGION \
+    --description="Meal Hour Tracker Docker images" \
+    --project=$PROJECT_ID
+"""
+
+[tasks.configure-docker]
+description = "Configure Docker for Google Cloud authentication"
+run = """
+gcloud auth configure-docker ${REGION}-docker.pkg.dev
+"""
+
+[tasks.build]
+description = "Build Docker image locally"
+run = """
+docker build --platform linux/amd64 -t ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:latest .
+"""
+
+[tasks.push]
+description = "Push Docker image to Artifact Registry"
+depends = ["configure-docker"]
+run = """
+docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:latest
+"""
+
+[tasks.build-and-push]
+description = "Build and push Docker image"
+depends = ["build", "push"]
+
+[tasks.deploy]
+description = "Deploy to Cloud Run"
+run = """
+gcloud run deploy $SERVICE_NAME \
+    --image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:latest \
+    --platform managed \
+    --region $REGION \
+    --allow-unauthenticated \
+    --port 8080 \
+    --memory 1Gi \
+    --cpu 1 \
+    --timeout 300 \
+    --max-instances 10 \
+    --project $PROJECT_ID
+"""
+
+[tasks.build-push-deploy]
+description = "Complete deployment pipeline: build, push, and deploy"
+run = """
+mise run build && \
+mise run push && \
+mise run deploy
+"""
+
+[tasks.logs]
+description = "View Cloud Run logs"
+run = """
+gcloud run services logs read $SERVICE_NAME \
+    --region $REGION \
+    --project $PROJECT_ID \
+    --limit 50
+"""
+
+[tasks.describe]
+description = "Get service details and URL"
+run = """
+gcloud run services describe $SERVICE_NAME \
+    --region $REGION \
+    --project $PROJECT_ID
+"""
+
+[tasks.delete]
+description = "Delete Cloud Run service"
+run = """
+gcloud run services delete $SERVICE_NAME \
+    --region $REGION \
+    --project $PROJECT_ID
+"""
+
+[tasks.local-build]
+description = "Build and run Docker container locally for testing"
+run = """
+docker build -t meal-hour-local . && \
+docker run -p 8080:8080 \
+    -e PORT=8080 \
+    -v ~/.config/gcloud:/root/.config/gcloud \
+    meal-hour-local
+"""
+
+[tasks.clean]
+description = "Clean up local Docker images"
+run = """
+docker rmi ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:latest || true
+docker rmi meal-hour-local || true
+"""
