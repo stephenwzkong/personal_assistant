@@ -71,3 +71,10 @@ dmypy.json
 # uv
 .uv/
 
+.mcp.json
+
+# Node / Vite frontend
+node_modules/
+.pnpm-store/
+frontend/dist/
+*.tsbuildinfo
