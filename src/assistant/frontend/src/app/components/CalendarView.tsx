@@ -4,6 +4,7 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Home as HomeIcon } from "lucide-react";
 import { useCalendarEvents } from "../../hooks/useCalendar";
+import { useChatContext } from "../../contexts/ChatContext";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const locales = {
@@ -29,6 +30,7 @@ interface CalendarEvent {
 export function CalendarView() {
   const [view, setView] = useState<View>("week");
   const [date, setDate] = useState(new Date());
+  const { prefillChat } = useChatContext();
 
   // Compute date range for current view
   const { startDate, endDate } = useMemo(() => {
@@ -74,19 +76,15 @@ export function CalendarView() {
   }, [data]);
 
   const handleSelectSlot = useCallback(
-    ({ start, end }: { start: Date; end: Date }) => {
-      const title = window.prompt("Enter event title:");
-      if (title) {
-        // For now just show — real creation goes through chat
-        alert(`To create "${title}", use the chat: "Schedule ${title} on ${format(start, "MMM d")} at ${format(start, "h:mm a")}"`);
-      }
+    ({ start }: { start: Date; end: Date }) => {
+      prefillChat(`Schedule an event on ${format(start, "MMM d")} at ${format(start, "h:mm a")}: `);
     },
-    []
+    [prefillChat]
   );
 
   const handleSelectEvent = useCallback((event: CalendarEvent) => {
-    alert(`Event: ${event.title}\n${event.description || ""}`);
-  }, []);
+    prefillChat(`Tell me about my "${event.title}" event`);
+  }, [prefillChat]);
 
   return (
     <div className="h-full flex flex-col bg-white">

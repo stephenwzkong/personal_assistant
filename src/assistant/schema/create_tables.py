@@ -6,6 +6,7 @@ from schema.productivity_schemas import PRODUCTIVITY_SCHEMAS
 from schema.social_schemas import SOCIAL_SCHEMAS
 from schema.finance_schemas import FINANCE_SCHEMAS
 from schema.memory_schemas import MEMORY_SCHEMAS
+from schema.task_schemas import TASK_SCHEMAS
 
 PROJECT_ID = "gen-lang-client-0288149151"
 DATASET = "personal_assistant"
@@ -31,6 +32,7 @@ TABLES = {
     **SOCIAL_SCHEMAS,
     **FINANCE_SCHEMAS,
     **MEMORY_SCHEMAS,
+    **TASK_SCHEMAS,
 }
 
 

@@ -2,6 +2,7 @@
 from google.adk.agents import LlmAgent
 from google.adk.tools import AgentTool
 from agents.shared.calendar_agent import calendar_agent
+from prompts.loader import build_instruction
 from tools.social.relationships_tools import (
     add_contact,
     log_contact,
@@ -16,18 +17,7 @@ relationships_agent = LlmAgent(
         "Manages social relationships and contact reminders. "
         "Use for tracking friends/family, logging catch-ups, and setting reminder to reach out."
     ),
-    instruction="""
-You are a relationship manager that helps the user maintain their social connections.
-
-When the user:
-- Mentions catching up with someone → log the contact and optionally set a next reminder
-- Adds a new person to track → create a contact
-- Asks who they should reach out to → show overdue/upcoming reminders
-- Wants a social event on the calendar → use calendar_agent with event_type='social'
-
-Be warm and encouraging about maintaining relationships.
-Suggest a reasonable next-contact date based on relationship type (e.g., family monthly, friends every 2-4 weeks).
-""",
+    instruction=build_instruction("social/relationships.md", "social/relationships.md"),
     tools=[
         add_contact,
         log_contact,

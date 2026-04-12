@@ -2,12 +2,15 @@ import { useState, useRef, useEffect } from "react";
 import { Send, User, Bot, RotateCcw } from "lucide-react";
 import { useSession } from "../../hooks/useSession";
 import { useChat } from "../../hooks/useChat";
+import { useChatContext } from "../../contexts/ChatContext";
 
 export function ChatInterface() {
   const { sessionId, userId, ready } = useSession();
   const { messages, send, clear, isThinking } = useChat(sessionId, userId);
+  const { pendingMessage, consumePending } = useChatContext();
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -16,6 +19,15 @@ export function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle prefilled messages from other pages (quick actions, calendar clicks, etc.)
+  useEffect(() => {
+    if (pendingMessage) {
+      const msg = consumePending();
+      setInput(msg);
+      inputRef.current?.focus();
+    }
+  }, [pendingMessage, consumePending]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +42,8 @@ export function ChatInterface() {
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg text-gray-900">AI Scheduling Assistant</h2>
-            <p className="text-sm text-gray-500 mt-1">Chat to manage your calendar</p>
+            <h2 className="text-lg text-gray-900">Assistant</h2>
+            <p className="text-sm text-gray-500 mt-1">Ask me anything about your day</p>
           </div>
           {messages.length > 0 && (
             <button
@@ -57,7 +69,7 @@ export function ChatInterface() {
               <div className="flex-1 text-left">
                 <div className="inline-block px-4 py-3 rounded-2xl bg-gray-50 text-gray-900">
                   <p className="text-[15px] leading-relaxed">
-                    Hello! I'm your scheduling assistant. I can help you manage your calendar, schedule meetings, and coordinate your time. How can I help you today?
+                    Hi! I can help you manage your calendar, track wellness, log expenses, and more. What would you like to do?
                   </p>
                 </div>
               </div>
@@ -128,10 +140,11 @@ export function ChatInterface() {
       <div className="border-t border-gray-200 p-6">
         <form onSubmit={handleSubmit} className="flex gap-3">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask me to schedule a meeting, check availability..."
+            placeholder="Schedule a meeting, log a workout, track spending..."
             className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-[15px] placeholder:text-gray-400"
             disabled={!ready}
           />

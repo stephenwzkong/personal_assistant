@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from api.routes import chat, calendar, session
+from api.routes import chat, calendar, session, tasks
 
 app = FastAPI(title="Personal Assistant API")
 
@@ -26,6 +26,7 @@ app.add_middleware(
 app.include_router(session.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(calendar.router, prefix="/api")
+app.include_router(tasks.router, prefix="/api")
 
 # Serve React build in production
 _frontend_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")

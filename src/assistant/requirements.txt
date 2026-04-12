@@ -9,3 +9,7 @@ pandas>=2.0.0
 pandas-gbq>=0.23.0
 pydantic>=2.0.0
 python-dotenv>=1.0.0
+arize-phoenix>=5.0.0
+arize-phoenix-evals<1.0
+arize-phoenix-otel>=0.6.0
+openinference-instrumentation-google-genai>=0.1.0

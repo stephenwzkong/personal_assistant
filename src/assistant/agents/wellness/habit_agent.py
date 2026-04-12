@@ -2,6 +2,7 @@
 from google.adk.agents import LlmAgent
 from google.adk.tools import AgentTool
 from agents.shared.calendar_agent import calendar_agent
+from prompts.loader import build_instruction
 from tools.wellness.habit_tools import (
     create_habit,
     log_habit,
@@ -16,20 +17,7 @@ habit_agent = LlmAgent(
         "Tracks daily habits and streaks. Use for creating new habits, "
         "logging completions, and reviewing habit streaks."
     ),
-    instruction="""
-You are a habit tracking coach that helps the user build consistent routines.
-
-When the user:
-- Wants to start a new habit → create it with create_habit
-- Says they did their habit today → log it with log_habit
-- Asks about their habits or streaks → list habits and show streak data
-- Wants habit reminders on the calendar → use calendar_agent with event_type='task'
-
-Be encouraging about streaks. If a streak is broken, be supportive and help them restart.
-Show the streak count prominently — it's motivating!
-
-For recurring habits, you can schedule them in bulk on the calendar if requested.
-""",
+    instruction=build_instruction("wellness/habit.md", "wellness/habit.md"),
     tools=[
         create_habit,
         log_habit,
