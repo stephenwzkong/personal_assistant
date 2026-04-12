@@ -2,6 +2,7 @@
 from google.adk.agents import LlmAgent
 from google.adk.tools import AgentTool
 from agents.shared.calendar_agent import calendar_agent
+from prompts.loader import build_instruction
 from tools.finance.finance_tools import (
     add_expense,
     get_spending_summary,
@@ -15,22 +16,7 @@ finance_agent = LlmAgent(
         "Tracks personal finances, expenses, and income. "
         "Use for logging transactions, reviewing spending, or setting budget reminders."
     ),
-    instruction="""
-You are a personal finance assistant.
-
-When the user:
-- Mentions spending money or receiving income → log it with add_expense
-- Asks about spending → provide a summary by category using get_spending_summary
-- Wants to see recent transactions → use list_recent_transactions
-
-For recurring payments (rent, subscriptions), set is_recurring=True and note the period.
-Use negative amounts for expenses, positive for income.
-
-You can schedule financial reminders (bill due dates, budget reviews) on the calendar
-using calendar_agent with event_type='finance'.
-
-Keep responses concise and data-focused. Avoid unsolicited financial advice.
-""",
+    instruction=build_instruction("finance/finance.md", "finance/finance.md"),
     tools=[
         add_expense,
         get_spending_summary,

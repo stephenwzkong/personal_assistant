@@ -11,6 +11,8 @@ from google.adk.runners import Runner
 from google.adk.sessions import BaseSessionService, InMemorySessionService
 from google.genai import types as genai_types
 
+from telemetry import init_phoenix
+
 # Lazy-import orchestrator to avoid circular imports at module load time
 _runner: Runner | None = None
 _session_service: BaseSessionService | None = None
@@ -33,6 +35,7 @@ def _build_session_service() -> BaseSessionService:
 def _get_runner() -> Runner:
     global _runner, _session_service
     if _runner is None:
+        init_phoenix()
         from agents.root_orchestrator import root_orchestrator
         _session_service = _build_session_service()
         _runner = Runner(

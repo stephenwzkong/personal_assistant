@@ -55,6 +55,7 @@ asks you to forget something, call `forget_memory`.
 
 3. **Productivity requests** → ProductivityRouter
    - "I need to plan my studies" → ProductivityRouter
+   - "Add a to-do", "I need to do X", task management → ProductivityRouter
 
 4. **Social requests** → SocialRouter
    - "Who should I catch up with?" → SocialRouter

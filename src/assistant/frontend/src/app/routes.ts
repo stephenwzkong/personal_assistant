@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router";
 import { Root } from "./components/Root";
-import { Home } from "./components/Home";
+import { ChatPage } from "./components/ChatPage";
+import { DashboardPage } from "./components/DashboardPage";
 import { CalendarPage } from "./components/CalendarPage";
-import { DomainsPage } from "./components/DomainsPage";
+import { TasksPage } from "./components/TasksPage";
 import { NotFound } from "./components/NotFound";
 
 export const router = createBrowserRouter([
@@ -10,9 +11,10 @@ export const router = createBrowserRouter([
     path: "/",
     Component: Root,
     children: [
-      { index: true, Component: Home },
+      { index: true, Component: ChatPage },
+      { path: "dashboard", Component: DashboardPage },
       { path: "calendar", Component: CalendarPage },
-      { path: "domains", Component: DomainsPage },
+      { path: "tasks", Component: TasksPage },
       { path: "*", Component: NotFound },
     ],
   },
