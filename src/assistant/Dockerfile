@@ -4,8 +4,8 @@ WORKDIR /build
 RUN corepack enable
 COPY frontend/package.json frontend/pnpm-workspace.yaml frontend/pnpm-lock.yaml* ./frontend/
 WORKDIR /build/frontend
+ENV PNPM_ALLOW_EXEC_INSTALL_SCRIPTS=true
 RUN pnpm install --frozen-lockfile || pnpm install
-RUN pnpm approve-builds esbuild @tailwindcss/oxide 2>/dev/null; pnpm install
 COPY frontend/ ./
 RUN pnpm build
 
