@@ -78,3 +78,10 @@ node_modules/
 .pnpm-store/
 frontend/dist/
 *.tsbuildinfo
+
+# ADK session databases
+.adk/
+
+# Reflex (legacy)
+.states/
+.web/
