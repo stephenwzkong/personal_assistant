@@ -6,8 +6,10 @@ from unittest.mock import MagicMock
 import pytest
 import pandas as pd
 
-_assistant_root = os.path.join(os.path.dirname(__file__), "..", "src", "assistant")
+_tests_root = os.path.dirname(os.path.abspath(__file__))
+_assistant_root = os.path.join(_tests_root, "..", "src", "assistant")
 sys.path.insert(0, os.path.abspath(_assistant_root))
+sys.path.insert(0, _tests_root)
 
 
 @pytest.fixture
