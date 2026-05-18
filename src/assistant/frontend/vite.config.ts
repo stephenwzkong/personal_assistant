@@ -24,5 +24,9 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:8082',
     },
+    fs: {
+      // Allow serving files from the monorepo root (needed for vitest setup files)
+      allow: ['../../..'],
+    },
   },
 })

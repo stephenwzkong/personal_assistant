@@ -4,6 +4,7 @@ WORKDIR /build
 RUN corepack enable
 COPY frontend/package.json frontend/pnpm-workspace.yaml frontend/pnpm-lock.yaml* ./frontend/
 WORKDIR /build/frontend
+ENV PNPM_ALLOW_EXEC_INSTALL_SCRIPTS=true
 RUN pnpm install --frozen-lockfile || pnpm install
 COPY frontend/ ./
 RUN pnpm build

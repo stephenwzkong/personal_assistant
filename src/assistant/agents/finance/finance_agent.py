@@ -2,12 +2,19 @@
 from google.adk.agents import LlmAgent
 from google.adk.tools import AgentTool
 from agents.shared.calendar_agent import calendar_agent
-from prompts.loader import build_instruction
+from skills.loader import load_skill_toolset
 from tools.finance.finance_tools import (
     add_expense,
     get_spending_summary,
     list_recent_transactions,
 )
+
+finance_toolset = load_skill_toolset("finance", additional_tools=[
+    add_expense,
+    get_spending_summary,
+    list_recent_transactions,
+    AgentTool(agent=calendar_agent),
+])
 
 finance_agent = LlmAgent(
     name="FinanceAgent",
@@ -16,12 +23,6 @@ finance_agent = LlmAgent(
         "Tracks personal finances, expenses, and income. "
         "Use for logging transactions, reviewing spending, or setting budget reminders."
     ),
-    instruction=build_instruction("finance/finance.md", "finance/finance.md"),
-    tools=[
-        add_expense,
-        get_spending_summary,
-        list_recent_transactions,
-        AgentTool(agent=calendar_agent),
-    ],
+    tools=[finance_toolset],
     output_key="finance_response",
 )

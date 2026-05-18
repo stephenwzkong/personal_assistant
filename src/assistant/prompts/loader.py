@@ -1,5 +1,9 @@
 """Load agent instructions from prompts/ and knowledge/ markdown files.
 
+DEPRECATED: Specialist agents now use ADK Skills (skills/loader.py) instead.
+This module is kept for backward compatibility with domain routers that still
+use inline instructions. See skills/ directory for the new pattern.
+
 Agents instantiate once at module import time, so file reads happen once
 at startup — no caching needed.
 """
