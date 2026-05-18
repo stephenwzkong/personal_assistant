@@ -39,6 +39,8 @@ Multi-agent app with a Vite + React + shadcn frontend and a FastAPI backend. Sin
 
 **Architecture**: Root `LlmAgent` orchestrator with domain routers (wellness, productivity, social) and standalone specialists (calendar, finance, trivial). Sub-agents use `AgentTool(calendar_agent)` to write calendar events. All data persisted to BigQuery (`personal_assistant` dataset).
 
+**ADK Skills**: Specialist agents use ADK `SkillToolset` for modular instruction and on-demand resource loading. Each skill lives in `skills/<name>/` with a `SKILL.md` (frontmatter + instructions) and optional `references/` (knowledge files loaded on-demand). The `skills/loader.py` helper wraps `load_skill_from_dir` + `SkillToolset` construction. Domain tools are passed as `additional_tools` and dynamically resolved when a skill is activated via `adk_additional_tools` metadata. Routers and the root orchestrator do NOT use skills — they keep inline instructions.
+
 **Sessions**: `FirestoreSessionService` (in `memory/firestore_session_service.py`) persists chat history to Firestore collections `adk_sessions` / `adk_user_state` / `adk_app_state`. Toggle with `PA_USE_FIRESTORE_SESSIONS=0` to fall back to in-memory.
 
 **Memory**: `memory/service.py` stores user facts in BigQuery `memory_facts`. `inject_memory_bundle` before-agent callback injects a compact `<user_memory>` block into the orchestrator prompt via `{user_memory_block}`.
@@ -52,6 +54,8 @@ Multi-agent app with a Vite + React + shadcn frontend and a FastAPI backend. Sin
 - `memory/` — session service, fact store, bundle injection callback
 - `frontend/src/app/components/` — React pages (Home, CalendarPage, DomainsPage, ChatInterface, DomainChat)
 - `frontend/src/lib/api.ts` — typed fetch client for `/api/*`
+- `skills/` — ADK Skill definitions per specialist agent (`SKILL.md` + `references/`)
+- `skills/loader.py` — centralized skill loading helper (`load_skill_toolset`)
 - `schema/create_tables.py` — provisions BigQuery tables (run with `PYTHONPATH=.`)
 
 ### 2. Agent System (`tests/agent.py`)

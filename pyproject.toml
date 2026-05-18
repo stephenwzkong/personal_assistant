@@ -11,7 +11,7 @@ dependencies = [
     "fpdf==1.7.2",
     "python-dotenv",
     "ipykernel>=7.1.0",
-    "google-adk>=1.21.0",
+    "google-adk>=1.33.0",
     "pywin32>=311; sys_platform == 'win32'",
     "litellm>=1.80.11",
     "google>=3.0.0",
