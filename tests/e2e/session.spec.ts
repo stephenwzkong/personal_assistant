@@ -3,7 +3,10 @@ import { test, expect } from "@playwright/test";
 test.describe("Session management", () => {
   test("session persists on refresh", async ({ page }) => {
     await page.goto("/");
-    await page.waitForTimeout(1000);
+    // Wait for session init API call to complete
+    await page.waitForResponse((resp) =>
+      resp.url().includes("/api/session/init") && resp.status() === 200
+    );
 
     const session1 = await page.evaluate(() =>
       sessionStorage.getItem("pa_session")
@@ -21,7 +24,9 @@ test.describe("Session management", () => {
 
   test("session persists across pages", async ({ page }) => {
     await page.goto("/");
-    await page.waitForTimeout(1000);
+    await page.waitForResponse((resp) =>
+      resp.url().includes("/api/session/init") && resp.status() === 200
+    );
 
     const session1 = await page.evaluate(() =>
       sessionStorage.getItem("pa_session")
